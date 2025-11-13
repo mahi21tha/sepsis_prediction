@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}New Assessment - {{ patient.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8">
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-[#000000] mb-4">New Clinical Assessment</h1>
+        <p class="text-lg text-[#000000]/80">Select the type of clinical assessment for **{{ patient.name }}**</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-[#000000]/10 p-8">
+        <form method="POST" class="space-y-6">
+            <div class="grid md:grid-cols-4 gap-6">
+                
+                                <div class="border border-[#000000]/20 rounded-lg p-6 hover:border-[#000000]/40 transition cursor-pointer" onclick="selectTest('qsofa', this)">
+                    <input type="radio" id="qsofa" name="test_type" value="qsofa" class="hidden">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#000000] mb-2">qSOFA</h3>
+                        <p class="text-sm text-[#000000]/70 mb-4">Quick bedside sepsis screening</p>
+                        <ul class="text-xs text-[#000000]/60 space-y-1">
+                            <li>• Respiratory rate ≥22</li>
+                            <li>• GCS <15 </li>
+                            <li>• SBP ≤100 mmHg</li>
+                        </ul>
+                    </div>
+                </div>
+
+                                <div class="border border-[#000000]/20 rounded-lg p-6 hover:border-[#000000]/40 transition cursor-pointer" onclick="selectTest('sofa', this)">
+                    <input type="radio" id="sofa" name="test_type" value="sofa" class="hidden">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#000000] mb-2">SOFA</h3>
+                        <p class="text-sm text-[#000000]/70 mb-4">Comprehensive organ dysfunction assessment</p>
+                        <ul class="text-xs text-[#000000]/60 space-y-1">
+                            <li>• 6 organ systems</li>
+                            <li>• Sepsis-3 criteria</li>
+                            <li>• Detailed scoring</li>
+                        </ul>
+                    </div>
+                </div>
+
+                                <div class="border border-[#000000]/20 rounded-lg p-6 hover:border-[#000000]/40 transition cursor-pointer" onclick="selectTest('septic_shock', this)">
+                    <input type="radio" id="septic_shock" name="test_type" value="septic_shock" class="hidden">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#000000] mb-2">Septic Shock</h3>
+                        <p class="text-sm text-[#000000]/70 mb-4">Critical condition assessment</p>
+                        <ul class="text-xs text-[#000000]/60 space-y-1">
+                            <li>• MAP ≥65 mmHg</li>
+                            <li>• Lactate >2 mmol/L</li>
+                            <li>• Vasopressor support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                                <div class="border border-[#000000]/20 rounded-lg p-6 hover:border-[#000000]/40 transition cursor-pointer" onclick="selectTest('news2', this)">
+                    <input type="radio" id="news2" name="test_type" value="news2" class="hidden">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3-.895-3-2 1.343-2 3-2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h-2a2 2 0 00-2 2v2"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#000000] mb-2">NEWS2</h3>
+                        <p class="text-sm text-[#000000]/70 mb-4">National Early Warning Score</p>
+                        <ul class="text-xs text-[#000000]/60 space-y-1">
+                            <li>• 7 physiological parameters</li>
+                            <li>• Track patient deterioration</li>
+                            <li>• Escalation protocol</li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+
+                        <div class="text-center pt-6">
+                <button type="submit" 
+                        class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#000000] hover:bg-[#333333] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#000000] transition">
+                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    Continue to Test
+                </button>
+            </div>
+        </form>
+    </div>
+
+        <div class="mt-8 bg-[#f8f9fa] rounded-2xl p-6">
+        <h3 class="text-lg font-semibold text-[#000000] mb-2">Patient Information</h3>
+        <div class="grid md:grid-cols-3 gap-4 text-sm text-[#000000]/80">
+            <div>
+                <strong>Name:</strong> {{ patient.name }}
+            </div>
+            <div>
+                <strong>Age:</strong> {{ patient.age }} years
+            </div>
+            <div>
+                <strong>Gender:</strong> {{ patient.gender }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectTest(testType, cardElement) {
+    // Remove selection from all cards
+    document.querySelectorAll('.border').forEach(card => {
+        card.classList.remove('border-[#000000]', 'bg-[#f8f9fa]');
+        card.classList.add('border-[#000000]/20');
+    });
+    
+    // Add selection to clicked card
+    cardElement.classList.remove('border-[#000000]/20');
+    cardElement.classList.add('border-[#000000]', 'bg-[#f8f9fa]');
+    
+    // Select the radio button
+    document.getElementById(testType).checked = true;
+}
+</script>
+{% endblock %}

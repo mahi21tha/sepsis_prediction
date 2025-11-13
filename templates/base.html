@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+            <span style="font-family: 'Merriweather', 'Times New Roman', Times, serif; font-weight: 700; letter-spacing: 0.5px;">
+                Sepsis Prediction Simulator
+            </span>
+        {% endblock %}
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #000000;
+        }
+        .official-title {
+            font-family: 'Merriweather', 'Times New Roman', Times, serif;
+            font-weight: 700;
+            font-size: 1.7rem;
+            letter-spacing: 0.5px;
+            color: #000000;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 1px 0 #fff;
+        }
+        .nav-link {
+            color: #000000;
+            font-weight: 500;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #666666;
+            border-bottom: 2px solid #666666;
+        }
+        .nav-bg {
+            background: linear-gradient(90deg, #fff 60%, #f8f9fa 100%);
+        }
+        .flash-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        /* Custom scrollbar for black and white theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #f8f9fa;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #666666;
+            border-radius: 4px;
+        }
+        main {
+            background: #fff;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.1);
+        }
+        footer {
+            background: linear-gradient(90deg, #f8f9fa 0%, #fff 100%);
+        }
+    </style>
+</head>
+<body class="bg-[#f8f9fa] text-[#000000] min-h-screen">
+    <!-- Navigation -->
+    <nav class="nav-bg shadow-lg border-b border-[#666666]/20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{{ url_for('home') }}" class="official-title">
+                            Sepsis Prediction Simulator
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="{{ url_for('home') }}" class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium {% if request.endpoint == 'home' %}active{% endif %}">
+                            Home
+                        </a>
+                        <a href="{{ url_for('about') }}" class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium {% if request.endpoint == 'about' %}active{% endif %}">
+                            About
+                        </a>
+                        {% if current_user.is_authenticated %}
+                        <div class="relative group">
+                            <button class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">
+                                Calculators
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-1">
+                                    <a href="{{ url_for('qsofa_calculator') }}" class="block px-4 py-2 text-sm text-[#000000] hover:bg-[#f8f9fa]">qSOFA Calculator</a>
+                                    <a href="{{ url_for('sofa_calculator') }}" class="block px-4 py-2 text-sm text-[#000000] hover:bg-[#f8f9fa]">SOFA Calculator</a>
+                                    <a href="{{ url_for('septic_shock_calculator') }}" class="block px-4 py-2 text-sm text-[#000000] hover:bg-[#f8f9fa]">Septic Shock Assessment</a>
+                                    <a href="{{ url_for('news2_calculator') }}" class="block px-4 py-2 text-sm text-[#000000] hover:bg-[#f8f9fa]">NEWS2 Calculator</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    {% if current_user.is_authenticated %}
+                        <div class="flex items-center space-x-4">
+                            <span class="text-[#000000]/80">Welcome, {{ current_user.name }}</span>
+                            <a href="{{ url_for('dashboard') }}" class="nav-link text-sm font-medium {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                                Dashboard
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="bg-[#000000] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#333333] transition">
+                                Logout
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="flex items-center space-x-4">
+                            <a href="{{ url_for('login') }}" class="nav-link text-sm font-medium">
+                                Login
+                            </a>
+                            <a href="{{ url_for('register') }}" class="bg-[#A259FF] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#3D0066] transition">
+                                Sign Up
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 py-2">
+                {% for category, message in messages %}
+                    <div class="flash-message mb-4 p-4 rounded-md 
+                        {% if category == 'error' %}
+                            bg-red-100 border-l-4 border-red-500 text-red-700
+                        {% elif category == 'success' %}
+                            bg-green-100 border-l-4 border-green-500 text-green-700
+                        {% elif category == 'warning' %}
+                            bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700
+                        {% else %}
+                            bg-[#f8f9fa] border-l-4 border-[#666666] text-[#000000]
+                        {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 mt-8 mb-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[#666666]/20 mt-16">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="text-center text-[#000000]/70">
+                <p class="font-semibold" style="font-family: 'Merriweather', 'Times New Roman', Times, serif;">&copy; 2024 Sepsis Prediction Simulator</p>
+                <p class="mt-2 text-sm">For educational purposes only. This tool is not a medical device and does not provide medical advice.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 
