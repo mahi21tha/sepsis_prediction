@@ -280,24 +280,20 @@ class SepsisScoring:
     def _interpret_news2(self, total_score: int, score_map: Dict) -> Tuple[str, str]:
         has_score_3 = 3 in score_map.values()
         
-        if total_score >= 7:
+        if has_score_3 or total_score >= 7:
             risk = "High"
             recommendation = "EMERGENCY RESPONSE: Clinical urgency high. Immediate senior clinical review and continuous monitoring required."
         elif total_score >= 5:
             risk = "Medium"
             recommendation = "URGENT REVIEW: Review by a clinician/doctor competent in acute illness. Monitor every hour."
-        elif has_score_3: 
-            risk = "Low-Medium"
-            recommendation = "ROUTINE MONITORING:  Urgent Ward-based care. Monitor every 4-12 hours."
-        else :
+        else: 
             risk = "Low"
-            recommendation = "ROUTINE MONITORING:  Ward-based care. Monitor every 4-12 hours."
-      
-
+            recommendation = "ROUTINE MONITORING: Ward-based care. Monitor every 4-12 hours."
+        
         return risk, recommendation
 
     # ---------- NEWS2 Calculation (Updated) ----------
-    def calculate_news2(self, respiratory_rate: int, SpO2_Scale_1: int, SpO2_Scale_2: int,
+    def calculate_news2(self, respiratory_rate: int, oxygen_saturation: int,
                         supplemental_oxygen: bool, systolic_bp: int,
                         heart_rate: int, level_of_consciousness: str,
                         temperature: float) -> Dict[str, Union[int, str]]:
@@ -314,29 +310,18 @@ class SepsisScoring:
             score['respiratory_rate'] = 1
         elif 21 <= respiratory_rate <= 24:
             score['respiratory_rate'] = 2
-        elif score['respiratory_rate'] <=8 or score['respiratory_rate'] >=25:
+        else:  # ≤8 or ≥25
             score['respiratory_rate'] = 3
 
-        # SpO2 Scale 1 (%)
-        if SpO2_Scale_1 >= 96:
+        # Oxygen saturation
+        if oxygen_saturation >= 96:
             score['oxygen_saturation'] = 0
-        elif 94 <= SpO2_Scale_1 <= 95:
-            score['SpO2_Scale_1'] = 1
-        elif 92 <= SpO2_Scale_1 <= 93:
-            score['SpO2_Scale_1'] = 2
+        elif 94 <= oxygen_saturation <= 95:
+            score['oxygen_saturation'] = 1
+        elif 92 <= oxygen_saturation <= 93:
+            score['oxygen_saturation'] = 2
         else:  # ≤91
-            score['SpO2_Scale_1'] = 3
-
-        # SpO2 Scale 2 (%)
-        if 88 <= SpO2_Scale_2 >= 92 or (not supplemental_oxygen and SpO2_Scale_2 >=93)  :
-            score['oxygen_saturation'] = 0
-        elif 86 <= SpO2_Scale_2 <= 87 or (supplemental_oxygen and 93 <= SpO2_Scale_2 >= 94) :
-            score['SpO2_Scale_2'] = 1
-        elif 84 <= SpO2_Scale_2 <= 85 or (supplemental_oxygen and 95 <= SpO2_Scale_2 >= 96) :
-            score['SpO2_Scale_2'] = 2
-        else:  # ≤91
-            score['SpO2_Scale_2'] = 3
-
+            score['oxygen_saturation'] = 3
 
         # Supplemental oxygen
         score['supplemental_oxygen'] = 2 if supplemental_oxygen else 0

@@ -40,24 +40,28 @@
                     <input type="number" step="0.1" min="32.0" max="43.0" id="temperature" name="temperature" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20" placeholder="e.g., 36.8">
                 </div>
                 
-                <!-- 5. Oxygen Saturation -->
+                <!-- 5. SpO2_Scale_1 -->
                 <div>
-                    <label for="oxygen_saturation" class="block text-sm font-medium text-[#000000] mb-1">5. Oxygen Saturation (%) <span class="text-red-500">*</span></label>
-                    <input type="number" step="1" min="50" max="100" id="oxygen_saturation" name="oxygen_saturation" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20" placeholder="e.g., 96">
+                    <label for="SpO2_Scale_1" class="block text-sm font-medium text-[#000000] mb-1">5. SpO2_Scale_1 (%) <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" min="50" max="100" id="SpO2_Scale_1" name="SpO2_Scale_1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20" placeholder="e.g., 96">
+                </div>
+
+                <!-- 6. SpO2_Scale_2 -->
+                <div>
+                    <label for="SpO2_Scale_2" class="block text-sm font-medium text-[#000000] mb-1">6. SpO2_Scale_2 (%) <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" min="50" max="100" id="SpO2_Scale_2" name="SpO2_Scale_2" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20" placeholder="e.g., 96">
                 </div>
                 
-                <!-- 6. Level of Consciousness (AVPU Scale) -->
+                <!-- 7. Level of Consciousness (AVPU Scale) -->
                 <div>
-                    <label for="level_of_consciousness" class="block text-sm font-medium text-[#000000] mb-1">6. Level of Consciousness (AVPU) <span class="text-red-500">*</span></label>
+                    <label for="level_of_consciousness" class="block text-sm font-medium text-[#000000] mb-1">7. Level of Consciousness (AVPU) <span class="text-red-500">*</span></label>
                     <select id="level_of_consciousness" name="level_of_consciousness" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20">
                         <option value="Alert">A - Alert (Score 0)</option>
-                        <option value="Voice">V - Responds to Voice (Score 3)</option>
-                        <option value="Pain">P - Responds to Pain (Score 3)</option>
                         <option value="Unresponsive">U - Unresponsive (Score 3)</option>
                     </select>
                 </div>
                 
-                <!-- 7. Supplemental Oxygen (SpO2 Scale 2 Factor) -->
+                <!-- 8. Supplemental Oxygen (SpO2 Scale 2 Factor) -->
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-[#000000] mb-2">7. Supplemental Oxygen Usage</label>
                     <div class="flex items-center space-x-4 p-3 bg-[#f8f9fa] rounded-lg border border-[#000000]/10">

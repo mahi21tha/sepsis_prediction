@@ -483,7 +483,8 @@ def news2_test(patient_id):
         try:
             # 1. Get form data for NEWS2. Must match the form inputs in news2_test_form.html
             respiratory_rate = int(request.form['respiratory_rate'])
-            oxygen_saturation = int(request.form['oxygen_saturation'])
+            SpO2_Scale_1 = int(request.form['SpO2_Scale_1'])
+            SpO2_Scale_2= int(request.form['SpO2_Scale_2'])
             supplemental_oxygen = request.form.get('supplemental_oxygen') == 'on'
             systolic_bp = int(request.form['systolic_bp'])
             heart_rate = int(request.form['heart_rate'])
@@ -492,7 +493,7 @@ def news2_test(patient_id):
 
             # 2. Calculate NEWS2 score
             result = sepsis_scorer.calculate_news2(
-                respiratory_rate, oxygen_saturation, supplemental_oxygen,
+                respiratory_rate, SpO2_Scale_1 , SpO2_Scale_2 , supplemental_oxygen,
                 systolic_bp, heart_rate, level_of_consciousness, temperature
             )
             
@@ -503,7 +504,7 @@ def news2_test(patient_id):
                 total_score=result['total_score'],
                 # Determine high_risk based on NEWS2 bands (>=5 or any score of 3)
                 high_risk=(result.get('risk_band') == 'Medium' or result.get('risk_band') == 'High'),
-                interpretation=result.get('recommended_response'),
+                interpretation=result['interpretation'],
                 
                 # Store input parameters in existing, relevant fields
                 respiratory_rate=float(respiratory_rate),
@@ -520,7 +521,8 @@ def news2_test(patient_id):
                                    result=result, 
                                    patient=patient,
                                    respiratory_rate=respiratory_rate,
-                                   oxygen_saturation=oxygen_saturation,
+                                   SpO2_Scale_1= SpO2_Scale_1,
+                                   SpO2_Scale_2=SpO2_Scale_2,
                                    supplemental_oxygen=supplemental_oxygen,
                                    systolic_bp=systolic_bp,
                                    heart_rate=heart_rate,
@@ -689,7 +691,8 @@ def news2_calculator():
     if request.method == 'POST':
         try:
             respiratory_rate = int(request.form['respiratory_rate'])
-            oxygen_saturation = int(request.form['oxygen_saturation'])
+            SpO2_Scale_1 = int(request.form['SpO2_Scale_1'])
+            SpO2_Scale_2= int(request.form['SpO2_Scale_2'])
             supplemental_oxygen = request.form.get('supplemental_oxygen') == 'on'
             systolic_bp = int(request.form['systolic_bp'])
             heart_rate = int(request.form['heart_rate'])
@@ -697,7 +700,7 @@ def news2_calculator():
             temperature = float(request.form['temperature'])
 
             result = sepsis_scorer.calculate_news2(
-                respiratory_rate, oxygen_saturation, supplemental_oxygen,
+                respiratory_rate, SpO2_Scale_1,SpO2_Scale_2, supplemental_oxygen,
                 systolic_bp, heart_rate, level_of_consciousness, temperature
             )
 

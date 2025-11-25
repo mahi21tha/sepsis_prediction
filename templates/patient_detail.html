@@ -54,6 +54,8 @@
                                     {% if latest_test.sepsis_criteria_met %}Sepsis Present{% else %}No Sepsis{% endif %}
                                 {% elif latest_test.test_type == 'septic_shock' %}
                                     {% if latest_test.septic_shock_present %}Septic Shock{% else %}No Shock{% endif %}
+                                {% elif latest_test.test_type == 'news2' %}
+                                    {% if latest_test.high_risk %}High risk {% else %}Low Risk{% endif %}
                                 {% endif %}
                             </div>
                             <p class="text-sm text-[#000000]/70 mt-1">Latest Result</p>
@@ -101,12 +103,16 @@
                                             <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
                                                 <span class="text-red-600 font-semibold text-sm">!</span>
                                             </div>
+                                        {% elif test.test_type == 'news2' %}
+                                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                                <span class="text-yellow-600 font-semibold text-sm">N</span>
+                                            </div>
                                         {% endif %}
                                     </div>
                                     <div class="flex-1">
                                         <div class="flex items-center space-x-2">
                                             <h4 class="text-sm font-medium text-[#000000]">
-                                                {% if test.test_type == 'qsofa' %}qSOFA Test{% elif test.test_type == 'sofa' %}SOFA Test{% elif test.test_type == 'septic_shock' %}Septic Shock Assessment{% endif %}
+                                                {% if test.test_type == 'qsofa' %}qSOFA Test{% elif test.test_type == 'sofa' %}SOFA Test{% elif test.test_type == 'septic_shock' %}Septic Shock Assessment{% elif test.test_type == 'news2' %}NEWS2{% endif %}
                                             </h4>
                                             <span class="text-xs text-[#000000]/60">{{ test.timestamp.strftime('%B %d, %Y at %H:%M') }}</span>
                                         </div>
@@ -123,6 +129,8 @@
                                                     Score: {{ test.total_score }} ({% if test.sepsis_criteria_met %}Sepsis{% else %}No Sepsis{% endif %})
                                                 {% elif test.test_type == 'septic_shock' %}
                                                     {% if test.septic_shock_present %}Septic Shock Present{% else %}No Septic Shock{% endif %}
+                                                {% elif test.test_type == 'news2' %}
+                                                    Score: {{ test.total_score }} ({% if test.high_risk %}High Risk{% else %}Low Risk{% endif %})
                                                 {% endif %}
                                             </span>
                                         </div>
