@@ -274,7 +274,7 @@ class SepsisScoring:
                     "Hospital mortality >40%. Requires immediate intensive care.")
         else:
             missing = [k for k, v in criteria.items() if not v]
-            return f"Septic shock criteria not fully met. Missing: {', '.join(missing)}"
+            return f" SEPTIC SHOCK NOT PRESENT "
     
     # ---------- NEWS2 Interpretation Helper (New) ----------
     def _interpret_news2(self, total_score: int, score_map: Dict) -> Tuple[str, str]:
