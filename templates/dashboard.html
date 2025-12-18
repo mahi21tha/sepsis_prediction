@@ -148,14 +148,23 @@
                                              background:#E6FFF2;color:#00B26A;
                                          {% endif %}">
                                 {% if latest_test.sepsis_criteria_met or latest_test.high_risk or latest_test.septic_shock_present %}
-                                    {% if latest_test.test_type == 'qsofa' %}High Risk
-                                    {% elif latest_test.test_type == 'sofa' %}Sepsis
-                                    {% elif latest_test.test_type == 'septic_shock' %}Septic Shock{% endif %}
-                                {% else %}
-                                    {% if latest_test.test_type == 'qsofa' %}Low Risk
-                                    {% elif latest_test.test_type == 'sofa' %}No Sepsis
-                                    {% elif latest_test.test_type == 'septic_shock' %}No Shock{% endif %}
-                                {% endif %}
+    {% if latest_test.test_type == 'qsofa' %}
+        High Risk
+    {% elif latest_test.test_type == 'sofa' %}
+        Sepsis
+    {% elif latest_test.test_type == 'septic_shock' %}
+        Septic Shock
+    {% endif %}
+{% else %}
+    {% if latest_test.test_type == 'qsofa' %}
+        Low Risk
+    {% elif latest_test.test_type == 'sofa' %}
+        No Sepsis
+    {% elif latest_test.test_type == 'septic_shock' %}
+        No Shock
+    {% endif %}
+{% endif %}
+
                             </span>
                         {% endif %}
 

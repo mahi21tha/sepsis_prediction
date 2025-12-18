@@ -16,24 +16,6 @@
 
             <div class="grid md:grid-cols-2 gap-6">
                 
-                <!-- Age -->
-<div>
-    <label for="Age" class="block text-sm font-medium text-[#000000] mb-1">
-        Patient Age (years) <span class="text-red-500">*</span>
-    </label>
-    <input
-        type="number"
-        step="1"
-        min="0"
-        id="Age"
-        name="Age"
-        required
-        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20"
-        placeholder="e.g., 45"
-        
-    >
-</div>
-
                 <!-- 1. Respiratory Rate -->
                 <div>
                     <label for="respiratory_rate" class="block text-sm font-medium text-[#000000] mb-1">1. Respiratory Rate (breaths/min) <span class="text-red-500">*</span></label>
@@ -79,15 +61,20 @@
                     </select>
                 </div>
                 
-                <!-- 8. Supplemental Oxygen (SpO2 Scale 2 Factor) -->
+                <!-- 8. Supplemental Oxygen (FiO2)   -->
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-[#000000] mb-2">7. Supplemental Oxygen Usage</label>
+                    <label class="block text-sm font-medium text-[#000000] mb-2">7. FiO2</label>
                     <div class="flex items-center space-x-4 p-3 bg-[#f8f9fa] rounded-lg border border-[#000000]/10">
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="supplemental_oxygen" id="supplemental_oxygen" class="form-checkbox h-5 w-5 text-[#000000] rounded focus:ring-[#000000]" value="on">
                             <span class="ml-2 text-[#000000]/80 font-medium">Is the patient currently on supplemental oxygen?</span>
                         </label>
                     </div>
+                </div>
+
+                <div>
+                    <label for="heart_rate" class="block text-sm font-medium text-[#000000] mb-1">9.Age <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" min="1" id="Age" name="Age" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-[#000000] focus:ring focus:ring-[#000000]/20" placeholder="e.g., 49">
                 </div>
                 
             </div>

@@ -6,7 +6,38 @@ class SepsisScoring:
     Implementation of sepsis scoring systems: SOFA, qSOFA, and NEWS2
     Based on Sepsis-3 definitions and clinical criteria
     """
-    
+       # ---------- Compatibility Wrapper (FINAL FIX) ----------
+    def calculate_septic_shock(
+        self,
+        map_mmhg: float,
+        lactate: float = None,
+        lactate_mmol_l: float = None,
+        vasopressors: bool = None,
+        on_vasopressors: bool = None,
+        adequate_volume_resus: bool = True,
+        sepsis_present: bool = False
+    ):
+        """
+        Compatibility wrapper to safely handle Flask form + route arguments
+        """
+
+        # Resolve lactate value
+        if lactate_mmol_l is None:
+            lactate_mmol_l = lactate
+
+        # Resolve vasopressor flag
+        if on_vasopressors is None:
+            on_vasopressors = vasopressors
+
+        return self.assess_septic_shock(
+            map_mmhg=map_mmhg,
+            lactate_mmol_l=lactate_mmol_l,
+            on_vasopressors=bool(on_vasopressors),
+            adequate_volume_resus=bool(adequate_volume_resus),
+            sepsis_present=bool(sepsis_present)
+        )
+
+
     def __init__(self):
         self.sofa_criteria = self._initialize_sofa_criteria()
     
@@ -249,32 +280,68 @@ class SepsisScoring:
         else:
             return "Continue routine care with infection monitoring"
     
-    # ---------- Septic Shock ----------
-    def assess_septic_shock(self, map_mmhg: float, lactate_mmol_l: float, 
-                            on_vasopressors: bool, adequate_volume_resus: bool,
-                            sepsis_present: bool) -> Dict[str, Union[bool, str, float]]:
+# ---------- Septic Shock ----------
+    def assess_septic_shock(
+        self,
+        map_mmhg: float,
+        lactate_mmol_l: float,
+        on_vasopressors: bool,
+        adequate_volume_resus: bool,
+        sepsis_present: bool
+    ) -> Dict[str, Union[bool, str]]:
+        """
+        Assess septic shock based on Sepsis-3 definition
+        """
+
         criteria = {
-            'sepsis_present': sepsis_present,
-            'persistent_hypotension_on_vasopressors': on_vasopressors and map_mmhg >= 65,
-            'lactate_greater_than_2': lactate_mmol_l > 2.0,
-            'adequate_volume_resuscitation': adequate_volume_resus
+            "sepsis_present": sepsis_present,
+            "persistent_hypotension_on_vasopressors": on_vasopressors and map_mmhg < 65,
+            "lactate_greater_than_2": lactate_mmol_l > 2.0,
+            "adequate_volume_resuscitation": adequate_volume_resus
         }
+
         septic_shock = all(criteria.values())
-        mortality_risk = ">40%" if septic_shock else "Variable based on other factors"
+
         return {
-            'criteria': criteria,
-            'septic_shock_present': septic_shock,
-            'estimated_mortality_risk': mortality_risk,
-            'interpretation': self._interpret_septic_shock(septic_shock, criteria)
+            "criteria": criteria,
+            "septic_shock_present": septic_shock,
+            "estimated_mortality_risk": ">40%" if septic_shock else "Variable",
+            "interpretation": self._interpret_septic_shock(septic_shock, criteria)
         }
-    
-    def _interpret_septic_shock(self, shock_present: bool, criteria: Dict) -> str:
+
+
+    def _interpret_septic_shock(
+        self,
+        shock_present: bool,
+        criteria: Dict
+    ) -> str:
+        """
+        Generate human-readable septic shock interpretation
+        """
+
         if shock_present:
-            return ("SEPTIC SHOCK PRESENT - Profound circulatory and metabolic abnormalities. "
-                    "Hospital mortality >40%. Requires immediate intensive care.")
-        else:
-            missing = [k for k, v in criteria.items() if not v]
-            return f" SEPTIC SHOCK NOT PRESENT "
+            return (
+                "SEPTIC SHOCK PRESENT — Persistent hypotension requiring vasopressors "
+                "with elevated lactate despite adequate fluid resuscitation. "
+                "Hospital mortality >40%. Immediate ICU care required."
+            )
+
+        reasons = []
+
+        if not criteria.get("sepsis_present"):
+            reasons.append("Sepsis diagnosis not confirmed")
+
+        if not criteria.get("persistent_hypotension_on_vasopressors"):
+            reasons.append("No persistent hypotension despite vasopressors")
+
+        if not criteria.get("lactate_greater_than_2"):
+            reasons.append("Lactate ≤ 2 mmol/L")
+
+        if not criteria.get("adequate_volume_resuscitation"):
+            reasons.append("Adequate fluid resuscitation not documented")
+
+        return "Septic shock criteria not fully met. Reasons: " + "; ".join(reasons)
+
     
     # ---------- NEWS2 Interpretation Helper (New) ----------
     def _interpret_news2(self, total_score: int, score_map: Dict) -> Tuple[str, str]:
