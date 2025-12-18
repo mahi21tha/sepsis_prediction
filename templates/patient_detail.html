@@ -55,7 +55,7 @@
                                 {% elif latest_test.test_type == 'septic_shock' %}
                                     {% if latest_test.septic_shock_present %}Septic Shock{% else %}No Shock{% endif %}
                                 {% elif latest_test.test_type == 'news2' %}
-                                    {% if latest_test.high_risk %}High risk {% else %}Low Risk{% endif %}
+                                    {% if latest_test.high_risk %}High risk {% elif latest_test.Medium %}Medium {% else %}Low Risk{% endif %}
                                 {% endif %}
                             </div>
                             <p class="text-sm text-[#000000]/70 mt-1">Latest Result</p>
@@ -130,7 +130,7 @@
                                                 {% elif test.test_type == 'septic_shock' %}
                                                     {% if test.septic_shock_present %}Septic Shock Present{% else %}No Septic Shock{% endif %}
                                                 {% elif test.test_type == 'news2' %}
-                                                    Score: {{ test.total_score }} ({% if test.high_risk %}High Risk{% else %}Low Risk{% endif %})
+                                                    Score: {{ test.total_score }} ({% if test.high_risk %}High Risk {% elif latest_test.Medium %}Medium {% else %}Low Risk{% endif %})
                                                 {% endif %}
                                             </span>
                                         </div>

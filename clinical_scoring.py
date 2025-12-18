@@ -300,7 +300,7 @@ class SepsisScoring:
     def calculate_news2(self, respiratory_rate: int, SpO2_Scale_1: int, SpO2_Scale_2: int,
                         supplemental_oxygen: bool, systolic_bp: int,
                         heart_rate: int, level_of_consciousness: str,
-                        temperature: float) -> Dict[str, Union[int, str]]:
+                        temperature: float,Age: int) -> Dict[str, Union[int, str]]:
         """
         Calculate NEWS2 score based on vital signs.
         level_of_consciousness expects: 'Alert', 'Voice', 'Pain', 'Unresponsive'
@@ -314,7 +314,7 @@ class SepsisScoring:
             score['respiratory_rate'] = 1
         elif 21 <= respiratory_rate <= 24:
             score['respiratory_rate'] = 2
-        elif score['respiratory_rate'] <=8 or score['respiratory_rate'] >=25:
+        elif respiratory_rate <=8 or respiratory_rate >=32:
             score['respiratory_rate'] = 3
 
         # SpO2 Scale 1 (%)
@@ -337,9 +337,18 @@ class SepsisScoring:
         else:  # ≤91
             score['SpO2_Scale_2'] = 3
 
+        if Age<40:
+            score['Age']=0
+        elif 40<=Age<=65:
+            score['Age']=1
+        elif 66<=Age<=79:
+            score['Age']=2
+        elif Age>=80:
+            score['Age']=3
+
 
         # Supplemental oxygen
-        score['supplemental_oxygen'] = 2 if supplemental_oxygen else 0
+        score['Fio2'] = 2 if supplemental_oxygen else 0
 
         # Systolic BP
         if 111 <= systolic_bp <= 219:

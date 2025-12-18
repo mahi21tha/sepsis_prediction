@@ -490,11 +490,12 @@ def news2_test(patient_id):
             heart_rate = int(request.form['heart_rate'])
             level_of_consciousness = request.form['level_of_consciousness']
             temperature = float(request.form['temperature'])
+            Age = float(request.form['Age'])
 
             # 2. Calculate NEWS2 score
             result = sepsis_scorer.calculate_news2(
                 respiratory_rate, SpO2_Scale_1 , SpO2_Scale_2 , supplemental_oxygen,
-                systolic_bp, heart_rate, level_of_consciousness, temperature
+                systolic_bp, heart_rate, level_of_consciousness, temperature,Age
             )
             
             # 3. Store result in database
@@ -503,7 +504,7 @@ def news2_test(patient_id):
                 test_type='news2',
                 total_score=result['total_score'],
                 # Determine high_risk based on NEWS2 bands (>=5 or any score of 3)
-                high_risk=(result.get('risk_band') == 'Medium' or result.get('risk_band') == 'High'),
+                high_risk=( result.get('risk_band') == 'High'),
                 interpretation=result['interpretation'],
                 
                 # Store input parameters in existing, relevant fields
@@ -698,10 +699,11 @@ def news2_calculator():
             heart_rate = int(request.form['heart_rate'])
             level_of_consciousness = request.form['level_of_consciousness']
             temperature = float(request.form['temperature'])
+            Age = float(request.form['Age'])
 
             result = sepsis_scorer.calculate_news2(
                 respiratory_rate, SpO2_Scale_1,SpO2_Scale_2, supplemental_oxygen,
-                systolic_bp, heart_rate, level_of_consciousness, temperature
+                systolic_bp, heart_rate, level_of_consciousness, temperature,Age
             )
 
         except Exception as e:
